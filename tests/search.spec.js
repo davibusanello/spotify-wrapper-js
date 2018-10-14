@@ -4,23 +4,12 @@ import sinonChai from 'sinon-chai';
 
 import {
   search, searchAlbums, searchArtists, searchTracks, searchPlaylists,
-} from '../src/main';
+} from '../src/search';
 
 chai.use(sinonChai);
 global.fetch = require('node-fetch');
 
-describe('Spotify Wrapper', () => {
-  let stubedFetch;
-
-  beforeEach(() => {
-    stubedFetch = sinon.stub(global, 'fetch');
-    stubedFetch.resolves({ json: () => {} });
-  });
-
-  afterEach(() => {
-    stubedFetch.restore();
-  });
-
+describe('search', () => {
   // smoke tests
   describe('Smoke tests', () => {
     it('should exist the search method', () => {
@@ -45,8 +34,20 @@ describe('Spotify Wrapper', () => {
   });
 
   describe('Generic search', () => {
+    let stubedFetch;
+    let promise;
+
+    beforeEach(() => {
+      stubedFetch = sinon.stub(global, 'fetch');
+      promise = stubedFetch.returns(Promise.resolve());
+    });
+
+    afterEach(() => {
+      stubedFetch.restore();
+    });
+
     it('should call fetch function', () => {
-      const artists = search();
+      const artists = search('Incubus', 'artist');
 
       expect(stubedFetch).to.have.been.calledOnce;
     });
@@ -68,23 +69,33 @@ describe('Spotify Wrapper', () => {
           .calledWith('https://api.spotify.com/v1/search?q=Incubus&type=artist,album');
       });
 
-      it('should return the JSON Data from the Promise', () => {
-        stubedFetch.resolves({
+      it('should return the JSON Data from the Promise', async () => {
+        const expecting = {
           body: 'json',
-        });
-        const artists = search('Incubus', 'artist');
-        // artists.then((data) => {
-        //   expect(data).to.be.eql({ body: 'json' });
-        // });
+        };
+        promise = stubedFetch.returns(Promise.resolves(JSON.stringify(expecting)));
 
-        expect(artists.resolveValue).to.be.eql({
-          body: 'json',
+        const artists = await search('Incubus', 'artist');
+
+        return artists.then((response) => {
+          expect(response.to.be.an('object'));
+          expect(response).to.be.eql(expecting);
         });
       });
     });
   });
 
   describe('searchArtists', () => {
+    let stubedFetch;
+
+    beforeEach(() => {
+      stubedFetch = sinon.stub(global, 'fetch').returns(Promise.resolve());
+    });
+
+    afterEach(() => {
+      stubedFetch.restore();
+    });
+
     it('should call fetch function', () => {
       const artists = searchArtists('incubus');
       expect(stubedFetch).to.have.been.calledOnce;
@@ -100,6 +111,16 @@ describe('Spotify Wrapper', () => {
   });
 
   describe('searchAlbums', () => {
+    let stubedFetch;
+
+    beforeEach(() => {
+      stubedFetch = sinon.stub(global, 'fetch').returns(Promise.resolve());
+    });
+
+    afterEach(() => {
+      stubedFetch.restore();
+    });
+
     it('should call fetch function', () => {
       const albums = searchAlbums('incubus');
       expect(stubedFetch).to.have.been.calledOnce;
@@ -115,6 +136,16 @@ describe('Spotify Wrapper', () => {
   });
 
   describe('searchTracks', () => {
+    let stubedFetch;
+
+    beforeEach(() => {
+      stubedFetch = sinon.stub(global, 'fetch').returns(Promise.resolve());
+    });
+
+    afterEach(() => {
+      stubedFetch.restore();
+    });
+
     it('should call fetch function', () => {
       const tracks = searchTracks('incubus');
       expect(stubedFetch).to.have.been.calledOnce;
@@ -130,6 +161,16 @@ describe('Spotify Wrapper', () => {
   });
 
   describe('searchPlaylists', () => {
+    let stubedFetch;
+
+    beforeEach(() => {
+      stubedFetch = sinon.stub(global, 'fetch').returns(Promise.resolve());
+    });
+
+    afterEach(() => {
+      stubedFetch.restore();
+    });
+
     it('should call fetch function', () => {
       const playlists = searchPlaylists('incubus');
       expect(stubedFetch).to.have.been.calledOnce;
