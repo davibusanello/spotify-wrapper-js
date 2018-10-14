@@ -1,5 +1,7 @@
 # spotify-wrapper
 
+[![Build Status](https://travis-ci.com/davibusanello/spotify-wrapper-js.svg?branch=master)](https://travis-ci.com/davibusanello/spotify-wrapper-js)
+
 > This library was created with study purpose.
 
 A wrapper to work with the [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
