@@ -2,13 +2,29 @@
   "name": "spotify-wrapper-js",
   "version": "0.0.1",
   "description": "A wrapper to work with the Spotify Web API.",
-  "main": "main.js",
+  "main": "src/index.js",
   "scripts": {
+    "clear": "rimraf lib dist",
+    "build": "npm run clear && ./node_modules/.bin/babel --out-dir lib src",
+    "build:watch": "npm run build -- --watch",
+    "build:umd": "./node_modules/.bin/webpack --mode=development --output-filename spotify-wrapper.umd.js",
+    "build:umd:min": "./node_modules/.bin/webpack --output-filename spotify-wrapper.umd.min.js -p",
+    "build:all": "npm run build && npm run build:umd && npm run build:umd:min",
     "lint": "./node_modules/.bin/eslint src/*.js",
     "prepush": "npm run lint && npm run test:coverage",
-    "test": "./node_modules/.bin/mocha tests/**/*.spec.js --require @babel/register",
-    "test:tdd": "./node_modules/.bin/mocha tests/**/*.spec.js --require @babel/register --watch --reporter=nyan",
-    "test:coverage": "nyc npm test"
+    "test": "./node_modules/.bin/mocha tests/**/*.spec.js --require @babel/register --require @babel/polyfill",
+    "test:tdd": "./node_modules/.bin/mocha tests/**/*.spec.js --require @babel/register --require @babel/polyfill --watch --reporter=nyan",
+    "test:coverage": "nyc npm test",
+    "coveralls": "npm test:coverage && nyc report --reporter=text-lcov | coveralls"
+  },
+  "files": [
+    "dist",
+    "lib"
+  ],
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
   },
   "nyc": {
     "functions": 80,
@@ -39,19 +55,24 @@
   },
   "homepage": "https://github.com/davibusanello/spotify-wrapper-js#readme",
   "devDependencies": {
+    "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.0",
+    "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/register": "^7.0.0",
+    "babel-loader": "^8.0.4",
     "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
     "eslint": "^5.6.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-promise": "^4.0.0",
     "husky": "^0.14.3",
     "mocha": "^5.2.0",
+    "node-fetch": "^2.2.0",
     "nyc": "^13.0.1",
+    "rimraf": "^2.6.2",
     "sinon": "^6.3.4",
     "sinon-chai": "^3.2.0",
     "uglifyjs-webpack-plugin": "^2.0.1",
@@ -59,7 +80,5 @@
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.8"
   },
-  "dependencies": {
-    "node-fetch": "^2.2.0"
-  }
+  "dependencies": {}
 }

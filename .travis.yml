@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+    - "node"
+    - "lts/*"
+cache:
+    directories:
+        "node_modules"
+
+before_script:
+    - npm run build:all
+
+after_script:
+
+after_success:
+    - npm run coveralls
