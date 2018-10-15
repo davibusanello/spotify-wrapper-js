@@ -1,6 +1,6 @@
 {
-  "name": "spotify-wrapper-js",
-  "version": "0.0.5",
+  "name": "davibusanello-spotify-wrapper",
+  "version": "0.0.8",
   "description": "A wrapper to work with the Spotify Web API.",
   "main": "lib/index.js",
   "scripts": {
